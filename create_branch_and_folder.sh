@@ -2,7 +2,7 @@
 TRAINER_NAME="swayam_lodha"
 DB_NAME="fund_finance"
 INTERFACE_NUM="2"
-COMPLEXITY_LEVEL="medium"
+COMPLEXITY_LEVEL="expert"
 POD_NAME="shreyansh_pod"
 WEEK="week_11_new"
 
