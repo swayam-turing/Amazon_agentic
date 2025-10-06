@@ -1,10 +1,10 @@
 # Change this information
-TRAINER_NAME="rubal.shakya"
-DB_NAME="enterprise_wiki"
-INTERFACE_NUM="3"
+TRAINER_NAME="swayam_lodha"
+DB_NAME="fund_finance"
+INTERFACE_NUM="2"
 COMPLEXITY_LEVEL="medium"
-POD_NAME="snehal_pod"
-WEEK="week_4"
+POD_NAME="shreyansh_pod"
+WEEK="week_11_new"
 
 # --- Get the current UNIX timestamp ---
 # This command gets the number of seconds since the Unix epoch
