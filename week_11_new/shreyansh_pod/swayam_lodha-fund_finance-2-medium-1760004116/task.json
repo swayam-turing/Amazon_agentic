@@ -6,7 +6,7 @@
   "temperature": 1,
   "interface_num": 2,
   "task": {
-    "user_id": "12",
+    "user_id": "43",
     "instruction": "You are Sarah Compos (email: sarahcampos144@hotmail.com). You need to update a portfolio for the investor Bryant-Meyer to change its status from 'archived' to 'inactive'.",
     "actions": [
         {
