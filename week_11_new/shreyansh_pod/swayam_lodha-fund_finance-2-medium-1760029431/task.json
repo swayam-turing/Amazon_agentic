@@ -1,0 +1,201 @@
+{
+  "env": "fund_finance",
+  "model_provider": "fireworks",
+  "model": "qwen3-coder-480b-a35b-instruct",
+  "num_trials": 3,
+  "temperature": 1,
+  "interface_num": 2,
+  "task": {
+    "user_id": "73",
+    "instruction": "You are Stephen Hickman (stephen.hickman@outlook.com), a fund manager. You want to postpone the due date for invoice with amount $45,435.35 and due date 2025-08-30 to 2025-09-26.",
+    "actions": [
+        {
+      "name": "search_user_entities",
+      "arguments": {
+        "entity_type": "users",
+        "filters": {
+          "email": "stephen.hickman@outlook.com"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "users",
+        "results": [
+          {
+            "created_at": "2022-12-07T19:50:46",
+            "email": "stephen.hickman@outlook.com",
+            "first_name": "Stephen",
+            "last_name": "Hickman",
+            "role": "fund_manager",
+            "status": "active",
+            "timezone": "America/Los_Angeles",
+            "updated_at": "2022-12-22T07:09:05",
+            "user_id": "73"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "check_approval",
+      "arguments": {
+        "action": "invoice_management",
+        "requester_email": "stephen.hickman@outlook.com"
+      },
+      "output": {
+        "approval_valid": true,
+        "approved_by": "finance_officer"
+      }
+    },
+    {
+      "name": "search_billing_entities",
+      "arguments": {
+        "entity_type": "invoices",
+        "filters": {
+          "amount": 45435.35,
+          "due_date": "2025-08-30"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "invoices",
+        "results": [
+          {
+            "amount": 45435.35,
+            "commitment_id": "1885",
+            "due_date": "2025-08-30",
+            "invoice_date": "2025-08-05",
+            "invoice_id": "1",
+            "status": "issued",
+            "updated_at": "2025-08-11T21:33:14"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "handle_invoice",
+      "arguments": {
+        "action": "update",
+        "invoice_data": {
+          "due_date": "2025-09-26",
+          "finance_officer_approval": true
+        },
+        "invoice_id": "1"
+      },
+      "output": {
+        "action": "update",
+        "invoice_data": {
+          "amount": 45435.35,
+          "commitment_id": "1885",
+          "due_date": "2025-09-26",
+          "invoice_date": "2025-08-05",
+          "invoice_id": "1",
+          "status": "issued",
+          "updated_at": "2025-10-01T12:00:00"
+        },
+        "invoice_id": "1",
+        "message": "Invoice 1 updated successfully",
+        "success": true
+      }
+    },
+    {
+      "name": "add_new_audit_trail",
+      "arguments": {
+        "action": "create",
+        "reference_id": "1",
+        "reference_type": "invoice"
+      },
+      "output": {
+        "action": "create",
+        "audit_trail_id": "3501",
+        "created_at": "2025-10-01T00:00:00",
+        "field_name": null,
+        "new_value": null,
+        "old_value": null,
+        "reference_id": "1",
+        "reference_type": "invoice"
+      }
+    }
+    ],
+    "outputs": [
+      "1", "3501"
+    ],
+  "edges": [
+    {
+      "from": "instruction",
+      "to": "search_user_entities",
+      "connection": {
+        "output": "entity_type, email",
+        "input": "entity_type, filters.email"
+      }
+    },
+    {
+      "from": "instruction",
+      "to": "check_approval",
+      "connection": {
+        "output": "action",
+        "input": "action"
+      }
+    },
+    {
+      "from": "search_user_entities",
+      "to": "check_approval",
+      "connection": {
+        "output": "results[0].email",
+        "input": "requester_email"
+      }
+    },
+    {
+      "from": "instruction",
+      "to": "search_billing_entities",
+      "connection": {
+        "output": "entity_type, amount, due_date",
+        "input": "entity_type, filters.amount, filters.due_date"
+      }
+    },
+    {
+      "from": "search_billing_entities",
+      "to": "handle_invoice",
+      "connection": {
+        "output": "results[0].invoice_id",
+        "input": "invoice_id"
+      }
+    },
+    {
+      "from": "check_approval",
+      "to": "handle_invoice",
+      "connection": {
+        "output": "approval_valid",
+        "input": "invoice_data.finance_officer_approval"
+      }
+    },
+    {
+      "from": "instruction",
+      "to": "handle_invoice",
+      "connection": {
+        "output": "action, due_date",
+        "input": "action, invoice_data.due_date"
+      }
+    },
+    {
+      "from": "handle_invoice",
+      "to": "add_new_audit_trail",
+      "connection": {
+        "output": "invoice_id",
+        "input": "reference_id"
+      }
+    },
+    {
+      "from": "instruction",
+      "to": "add_new_audit_trail",
+      "connection": {
+        "output": "action, reference_type",
+        "input": "action, reference_type"
+      }
+    }
+  ],
+  "num_edges": 9
+}
+}
+
