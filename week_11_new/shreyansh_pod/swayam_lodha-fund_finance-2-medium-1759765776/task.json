@@ -7,7 +7,7 @@
   "interface_num": 2,
   "task": {
     "user_id": "12",
-    "instruction": "You are Kelly Fuller, a fund manager. You need to onboard a new accredited investor who is based in USA named 'Tech Innovation Partners LLC' with loan facility as source of funds.",
+    "instruction": "You are Kelly Fuller, a fund manager. You need to onboard a new accredited investor who is based in USA named 'Tech Innovation Partners LLC' (tecnovate@outlook.com) with loan facility as source of funds.",
     "actions": [
     {
       "name": "search_user_entities",
@@ -100,8 +100,8 @@
     "from": "instruction",
     "to": "search_user_entities",
     "connection": {
-      "output": "entity_type, email",
-      "input": "entity_type, filters.email"
+      "output": "entity_type",
+      "input": "entity_type"
     }
   },
   {
