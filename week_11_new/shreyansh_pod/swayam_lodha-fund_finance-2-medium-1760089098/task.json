@@ -1,0 +1,253 @@
+{
+  "env": "fund_finance",
+  "model_provider": "fireworks",
+  "model": "qwen3-coder-480b-a35b-instruct",
+  "num_trials": 3,
+  "temperature": 1,
+  "interface_num": 2,
+  "task": {
+    "user_id": "114",
+    "instruction": "You are Richard Bass. You want to cancel the subscription of the investor 'Logan-Avery,' as it is pending from the last request date, which is 2023-08-22, which shows that the subscription is inactive.",
+    "actions": [
+        {
+      "name": "search_user_entities",
+      "arguments": {
+        "entity_type": "users",
+        "filters": {
+          "first_name": "Richard",
+          "last_name": "Bass"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "users",
+        "results": [
+          {
+            "created_at": "2023-12-02T04:31:19",
+            "email": "richard.bass@yahoo.com",
+            "first_name": "Richard",
+            "last_name": "Bass",
+            "role": "fund_manager",
+            "status": "active",
+            "timezone": "America/Chicago",
+            "updated_at": "2024-07-12T00:58:52",
+            "user_id": "114"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "check_approval",
+      "arguments": {
+        "action": "subscription_management",
+        "requester_email": "richard.bass@yahoo.com"
+      },
+      "output": {
+        "approval_valid": true,
+        "message": "Role 'fund_manager' is directly authorized for action 'subscription_management'"
+      }
+    },
+    {
+      "name": "search_investor_entities",
+      "arguments": {
+        "entity_type": "investors",
+        "filters": {
+          "name": "Logan-Avery"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "investors",
+        "results": [
+          {
+            "accreditation_status": "accredited",
+            "address": "902 Oconnell Avenue Apt. 279, Davisview, IN 49107",
+            "contact_email": "loganavery742@yahoo.com",
+            "country": "France",
+            "created_at": "2023-01-19T04:37:14",
+            "date_of_incorporation": "2012-12-01",
+            "investor_id": "126",
+            "name": "Logan-Avery",
+            "registration_number": 230372673,
+            "source_of_funds": "government_grant",
+            "status": "onboarded",
+            "tax_id": "990-66-9849"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "search_investment_flow_entities",
+      "arguments": {
+        "entity_type": "subscriptions",
+        "filters": {
+          "investor_id": "126",
+          "request_date": "2023-08-22"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "subscriptions",
+        "results": [
+          {
+            "amount": 3180389.81,
+            "approval_date": null,
+            "fund_id": "51",
+            "investor_id": "126",
+            "request_assigned_to": "104",
+            "request_date": "2023-08-22",
+            "status": "pending",
+            "subscription_id": "6",
+            "updated_at": "2025-07-28T15:41:52"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "handle_subscription",
+      "arguments": {
+        "action": "update",
+        "subscription_data": {
+          "status": "cancelled",
+          "fund_manager_approval": true,
+          "compliance_officer_approval": true
+        },
+        "subscription_id": "6"
+      },
+      "output": {
+        "action": "update",
+        "message": "Subscription 6 updated successfully.",
+        "subscription_data": {
+          "amount": 3180389.81,
+          "approval_date": null,
+          "fund_id": "51",
+          "investor_id": "126",
+          "request_assigned_to": "104",
+          "request_date": "2023-08-22",
+          "status": "cancelled",
+          "subscription_id": "6",
+          "updated_at": "2025-10-01T00:00:00"
+        },
+        "subscription_id": "6",
+        "success": true
+      }
+    },
+    {
+      "name": "add_new_audit_trail",
+      "arguments": {
+        "action": "create",
+        "reference_id": "6",
+        "reference_type": "subscription"
+      },
+      "output": {
+        "action": "create",
+        "audit_trail_id": "3501",
+        "created_at": "2025-10-01T00:00:00",
+        "field_name": null,
+        "new_value": null,
+        "old_value": null,
+        "reference_id": "6",
+        "reference_type": "subscription"
+      }
+    }
+    ],
+    "outputs": [
+      "126", "51", "6"
+    ],
+    "edges": [
+        {
+        "from": "instruction",
+        "to": "search_user_entities",
+        "connection": {
+            "output": "entity_type, first_name, last_name",
+            "input": "entity_type, filters.first_name, filters.last_name"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "check_approval",
+        "connection": {
+            "output": "action",
+            "input": "action"
+        }
+        },
+        {
+        "from": "search_user_entities",
+        "to": "check_approval",
+        "connection": {
+            "output": "results[0].email",
+            "input": "requester_email"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "search_investor_entities",
+        "connection": {
+            "output": "entity_type, name",
+            "input": "entity_type, filters.name"
+        }
+        },
+        {
+        "from": "search_investor_entities",
+        "to": "search_investment_flow_entities",
+        "connection": {
+            "output": "results[0].investor_id",
+            "input": "filters.investor_id"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "search_investment_flow_entities",
+        "connection": {
+            "output": "entity_type, request_date",
+            "input": "entity_type, filters.request_date"
+        }
+        },
+        {
+        "from": "search_investment_flow_entities",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "results[0].subscription_id",
+            "input": "subscription_id"
+        }
+        },
+        {
+        "from": "check_approval",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "approval_valid, approval_valid",
+            "input": "subscription_data.fund_manager_approval, subscription_data.compliance_officer_approval"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "action, status",
+            "input": "action, subscription_data.status"
+        }
+        },
+        {
+        "from": "handle_subscription",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "subscription_id",
+            "input": "reference_id"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "action, reference_type",
+            "input": "action, reference_type"
+        }
+        }
+    ],
+    "num_edges": 11
+    }
+    }
+
