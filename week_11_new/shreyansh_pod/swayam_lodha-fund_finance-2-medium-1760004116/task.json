@@ -7,14 +7,15 @@
   "interface_num": 2,
   "task": {
     "user_id": "43",
-    "instruction": "You are Sarah Compos (email: sarahcampos144@hotmail.com). You need to update a portfolio for the investor Bryant-Meyer to change its status from 'archived' to 'inactive'.",
+    "instruction": "You are Sarah Campos. You want to revise the quantity holding in the 'Zimmerman-Graham Strategic Fund' from 6182.2158 to 8925.2163.",
     "actions": [
         {
       "name": "search_user_entities",
       "arguments": {
         "entity_type": "users",
         "filters": {
-          "email": "sarahcampos144@hotmail.com"
+          "first_name": "Sarah",
+          "last_name": "Campos"
         }
       },
       "output": {
@@ -37,30 +38,37 @@
       }
     },
     {
-      "name": "search_investor_entities",
+      "name": "check_approval",
       "arguments": {
-        "entity_type": "investors",
+        "action": "portfolio_holding_management",
+        "requester_email": "sarahcampos144@hotmail.com"
+      },
+      "output": {
+        "approval_valid": true,
+        "message": "Role 'fund_manager' is directly authorized for action 'portfolio_holding_management'"
+      }
+    },
+    {
+      "name": "search_fund_entities",
+      "arguments": {
+        "entity_type": "funds",
         "filters": {
-          "name": "Bryant-Meyer"
+          "name": "Zimmerman-Graham Strategic Fund"
         }
       },
       "output": {
         "count": 1,
-        "entity_type": "investors",
+        "entity_type": "funds",
         "results": [
           {
-            "accreditation_status": "accredited",
-            "address": "7532 Smith Fork, East Jessica, OR 66644",
-            "contact_email": "bryantmeyer4679@finance.com",
-            "country": "France",
-            "created_at": "2024-11-07T14:29:05",
-            "date_of_incorporation": "2010-05-18",
-            "investor_id": "99",
-            "name": "Bryant-Meyer",
-            "registration_number": 362847729,
-            "source_of_funds": "royalty_or_licensing_income",
-            "status": "onboarded",
-            "tax_id": "915-06-4890"
+            "created_at": "2024-03-01T18:35:29",
+            "fund_id": "32",
+            "fund_type": "multi_asset_funds",
+            "manager_id": "4",
+            "name": "Zimmerman-Graham Strategic Fund",
+            "size": 499786636.02,
+            "status": "open",
+            "updated_at": "2025-07-08T10:45:23"
           }
         ],
         "success": true
@@ -69,54 +77,50 @@
     {
       "name": "search_portfolio_entities",
       "arguments": {
-        "entity_type": "portfolios",
+        "entity_type": "portfolio_holdings",
         "filters": {
-          "investor_id": "99"
+          "fund_id": "32",
+          "quantity": 6182.2158
         }
       },
       "output": {
         "count": 1,
-        "entity_type": "portfolios",
+        "entity_type": "portfolio_holdings",
         "results": [
           {
-            "created_at": "2024-06-23T10:03:44",
-            "investor_id": "99",
-            "portfolio_id": "99",
-            "status": "archived",
-            "updated_at": "2025-07-07T20:52:37"
+            "cost_basis": 213.838,
+            "created_at": "2024-11-01T17:08:03",
+            "fund_id": "32",
+            "holding_id": "187",
+            "portfolio_id": "27",
+            "quantity": 6182.2158
           }
         ],
         "success": true
       }
     },
     {
-      "name": "check_approval",
-      "arguments": {
-        "action": "portfolio_update",
-        "requester_email": "sarahcampos144@hotmail.com"
-      },
-      "output": {
-        "approval_valid": true,
-        "message": "Role 'fund_manager' is directly authorized for action 'portfolio_update'"
-      }
-    },
-    {
-      "name": "handle_portfolio",
+      "name": "handle_portfolio_holdings",
       "arguments": {
         "action": "update",
-        "portfolio_id": "99"
-      },
-      "output": {
-        "action": "update",
-        "message": "Portfolio 99 updated successfully",
-        "portfolio_data": {
-          "created_at": "2024-06-23T10:03:44",
-          "investor_id": "99",
-          "portfolio_id": "99",
-          "status": "inactive",
-          "updated_at": "2025-10-01T12:00:00"
+        "holding_data": {
+          "quantity": 8925.2163,
+          "fund_manager_approval": true
         },
-        "portfolio_id": "99",
+        "holding_id": "187"
+      },
+      "output": {
+        "action": "update",
+        "holding_data": {
+          "cost_basis": 213.838,
+          "created_at": "2024-11-01T17:08:03",
+          "fund_id": "32",
+          "holding_id": "187",
+          "portfolio_id": "27",
+          "quantity": 8925.2163
+        },
+        "holding_id": "187",
+        "message": "Portfolio holding 187 updated successfully",
         "success": true
       }
     },
@@ -124,55 +128,31 @@
       "name": "add_new_audit_trail",
       "arguments": {
         "action": "create",
-        "reference_id": "99",
-        "reference_type": "portfolio"
+        "reference_id": "187",
+        "reference_type": "holding"
       },
       "output": {
         "action": "create",
-        "audit_trail_id": "3502",
+        "audit_trail_id": "3501",
         "created_at": "2025-10-01T00:00:00",
         "field_name": null,
         "new_value": null,
         "old_value": null,
-        "reference_id": "99",
-        "reference_type": "portfolio"
+        "reference_id": "187",
+        "reference_type": "holding"
       }
     }
   ],
     "outputs": [
-      "43", "99", "3502"
+      "32", "187", "27"
     ],
   "edges": [
     {
       "from": "instruction",
       "to": "search_user_entities",
       "connection": {
-        "output": "entity_type, email",
-        "input": "entity_type, filters.email"
-      }
-    },
-    {
-      "from": "instruction",
-      "to": "search_investor_entities",
-      "connection": {
-        "output": "entity_type, name",
-        "input": "entity_type, filters.name"
-      }
-    },
-    {
-      "from": "search_investor_entities",
-      "to": "search_portfolio_entities",
-      "connection": {
-        "output": "results[0].investor_id",
-        "input": "filters.investor_id"
-      }
-    },
-    {
-      "from": "instruction",
-      "to": "search_portfolio_entities",
-      "connection": {
-        "output": "entity_type",
-        "input": "entity_type"
+        "output": "entity_type, first_name, last_name",
+        "input": "entity_type, filters.first_name, filters.last_name"
       }
     },
     {
@@ -192,26 +172,58 @@
       }
     },
     {
-      "from": "search_portfolio_entities",
-      "to": "handle_portfolio",
+      "from": "instruction",
+      "to": "search_fund_entities",
       "connection": {
-        "output": "results[0].portfolio_id",
-        "input": "portfolio_id"
+        "output": "entity_type, name",
+        "input": "entity_type, filters.name"
+      }
+    },
+    {
+      "from": "search_fund_entities",
+      "to": "search_portfolio_entities",
+      "connection": {
+        "output": "results[0].fund_id",
+        "input": "filters.fund_id"
       }
     },
     {
       "from": "instruction",
-      "to": "handle_portfolio",
+      "to": "search_portfolio_entities",
       "connection": {
-        "output": "action",
-        "input": "action"
+        "output": "entity_type, quantity",
+        "input": "entity_type, filters.quantity"
       }
     },
     {
-      "from": "handle_portfolio",
+      "from": "search_portfolio_entities",
+      "to": "handle_portfolio_holdings",
+      "connection": {
+        "output": "results[0].holding_id",
+        "input": "holding_id"
+      }
+    },
+    {
+      "from": "check_approval",
+      "to": "handle_portfolio_holdings",
+      "connection": {
+        "output": "approval_valid",
+        "input": "holding_data.fund_manager_approval"
+      }
+    },
+    {
+      "from": "instruction",
+      "to": "handle_portfolio_holdings",
+      "connection": {
+        "output": "action, quantity",
+        "input": "action, holding_data.quantity"
+      }
+    },
+    {
+      "from": "handle_portfolio_holdings",
       "to": "add_new_audit_trail",
       "connection": {
-        "output": "portfolio_id",
+        "output": "holding_id",
         "input": "reference_id"
       }
     },
@@ -224,7 +236,7 @@
       }
     }
   ],
-  "num_edges": 10
+  "num_edges": 11
 }
 }
 
