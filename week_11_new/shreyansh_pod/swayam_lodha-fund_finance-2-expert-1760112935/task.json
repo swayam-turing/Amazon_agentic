@@ -1,0 +1,375 @@
+{
+  "env": "fund_finance",
+  "model_provider": "fireworks",
+  "model": "qwen3-coder-480b-a35b-instruct",
+  "num_trials": 3,
+  "temperature": 1,
+  "interface_num": 2,
+  "task": {
+    "user_id": "31",
+    "instruction": "You are Jennifer Maldonado, a fund manager. You intend to revise the investment subscription for Logan-Avery in the Mitchell, Mendoza and Peterson Income Fund, setting the amount to USD 3,879,011.21, with the change taking effect on November 14, 2025. Please send the notification to the investor that the subscription is updated",
+    "actions": [
+        {
+      "name": "search_user_entities",
+      "arguments": {
+        "entity_type": "users",
+        "filters": {
+          "first_name": "Jennifer",
+          "last_name": "Maldonado"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "users",
+        "results": [
+          {
+            "created_at": "2024-11-28T06:56:51",
+            "email": "jennifermaldonado@gmail.com",
+            "first_name": "Jennifer",
+            "last_name": "Maldonado",
+            "role": "fund_manager",
+            "status": "active",
+            "timezone": "Asia/Tokyo",
+            "updated_at": "2025-03-11T21:56:18",
+            "user_id": "31"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "check_approval",
+      "arguments": {
+        "action": "subscription_management",
+        "requester_email": "jennifermaldonado@gmail.com"
+      },
+      "output": {
+        "approval_valid": true,
+        "message": "Role 'fund_manager' is directly authorized for action 'subscription_management'"
+      }
+    },
+    {
+      "name": "search_investor_entities",
+      "arguments": {
+        "entity_type": "investors",
+        "filters": {
+          "name": "Logan-Avery"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "investors",
+        "results": [
+          {
+            "accreditation_status": "accredited",
+            "address": "902 Oconnell Avenue Apt. 279, Davisview, IN 49107",
+            "contact_email": "loganavery742@yahoo.com",
+            "country": "France",
+            "created_at": "2023-01-19T04:37:14",
+            "date_of_incorporation": "2012-12-01",
+            "investor_id": "126",
+            "name": "Logan-Avery",
+            "registration_number": 230372673,
+            "source_of_funds": "government_grant",
+            "status": "onboarded",
+            "tax_id": "990-66-9849"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "search_fund_entities",
+      "arguments": {
+        "entity_type": "funds",
+        "filters": {
+          "name": "Mitchell, Mendoza and Peterson Income Fund"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "funds",
+        "results": [
+          {
+            "created_at": "2023-01-23T11:59:14",
+            "fund_id": "51",
+            "fund_type": "infrastructure_funds",
+            "manager_id": "48",
+            "name": "Mitchell, Mendoza and Peterson Income Fund",
+            "size": 166887537.9,
+            "status": "open",
+            "updated_at": "2023-02-11T13:16:28"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "search_investment_flow_entities",
+      "arguments": {
+        "entity_type": "subscriptions",
+        "filters": {
+          "fund_id": "51",
+          "investor_id": "126"
+        }
+      },
+      "output": {
+        "count": 1,
+        "entity_type": "subscriptions",
+        "results": [
+          {
+            "amount": 3180389.81,
+            "approval_date": null,
+            "fund_id": "51",
+            "investor_id": "126",
+            "request_assigned_to": "104",
+            "request_date": "2023-08-22",
+            "status": "pending",
+            "subscription_id": "6",
+            "updated_at": "2025-07-28T15:41:52"
+          }
+        ],
+        "success": true
+      }
+    },
+    {
+      "name": "handle_subscription",
+      "arguments": {
+        "action": "update",
+        "subscription_data": {
+          "investor_id": "126",
+          "fund_id": "51",
+          "request_date": "2025-11-14",
+          "fund_manager_approval": true,
+          "compliance_officer_approval": true,
+          "amount": 3879011.21
+        },
+        "subscription_id": "6"
+      },
+      "output": {
+        "action": "update",
+        "message": "Subscription 6 updated successfully.",
+        "subscription_data": {
+          "amount": 3879011.21,
+          "approval_date": null,
+          "fund_id": "51",
+          "investor_id": "126",
+          "request_assigned_to": "104",
+          "request_date": "2025-11-14",
+          "status": "pending",
+          "subscription_id": "6",
+          "updated_at": "2025-10-01T00:00:00"
+        },
+        "subscription_id": "6",
+        "success": true
+      }
+    },
+    {
+      "name": "add_new_audit_trail",
+      "arguments": {
+        "action": "create",
+        "reference_id": "6",
+        "reference_type": "subscription"
+      },
+      "output": {
+        "action": "create",
+        "audit_trail_id": "3501",
+        "created_at": "2025-10-01T00:00:00",
+        "field_name": null,
+        "new_value": null,
+        "old_value": null,
+        "reference_id": "6",
+        "reference_type": "subscription"
+      }
+    },
+    {
+      "name": "handle_notifications",
+      "arguments": {
+        "action": "create",
+        "notification_data": {
+          "email": "loganavery742@yahoo.com",
+          "type": "subscription_update",
+          "class": "subscriptions"
+        }
+      },
+      "output": {
+        "action": "create",
+        "message": "Notification 1501 created successfully for loganavery742@yahoo.com",
+        "notification_data": {
+          "class": "subscriptions",
+          "created_at": "2025-10-01T12:00:00",
+          "email": "loganavery742@yahoo.com",
+          "notification_id": "1501",
+          "reference_id": null,
+          "sent_at": null,
+          "status": "pending",
+          "type": "subscription_update"
+        },
+        "notification_id": "1501",
+        "success": true
+      }
+    },
+    {
+      "name": "add_new_audit_trail",
+      "arguments": {
+        "action": "create",
+        "reference_id": "1501",
+        "reference_type": "notification"
+      },
+      "output": {
+        "action": "create",
+        "audit_trail_id": "3502",
+        "created_at": "2025-10-01T00:00:00",
+        "field_name": null,
+        "new_value": null,
+        "old_value": null,
+        "reference_id": "1501",
+        "reference_type": "notification"
+      }
+    }
+    ],
+    "outputs": [
+      "126", "51", "6"
+    ],
+    "edges": [
+        {
+        "from": "instruction",
+        "to": "search_user_entities",
+        "connection": {
+            "output": "entity_type, first_name, last_name",
+            "input": "entity_type, filters.first_name, filters.last_name"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "check_approval",
+        "connection": {
+            "output": "action",
+            "input": "action"
+        }
+        },
+        {
+        "from": "search_user_entities",
+        "to": "check_approval",
+        "connection": {
+            "output": "results[0].email",
+            "input": "requester_email"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "search_investor_entities",
+        "connection": {
+            "output": "entity_type, name",
+            "input": "entity_type, filters.name"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "search_fund_entities",
+        "connection": {
+            "output": "entity_type, name",
+            "input": "entity_type, filters.name"
+        }
+        },
+        {
+        "from": "search_fund_entities",
+        "to": "search_investment_flow_entities",
+        "connection": {
+            "output": "results[0].fund_id",
+            "input": "filters.fund_id"
+        }
+        },
+        {
+        "from": "search_investor_entities",
+        "to": "search_investment_flow_entities",
+        "connection": {
+            "output": "results[0].investor_id",
+            "input": "filters.investor_id"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "search_investment_flow_entities",
+        "connection": {
+            "output": "entity_type",
+            "input": "entity_type"
+        }
+        },
+        {
+        "from": "search_investment_flow_entities",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "results[0].investor_id, results[0].fund_id, results[0].subscription_id",
+            "input": "subscription_data.investor_id, subscription_data.fund_id, subscription_id"
+        }
+        },
+        {
+        "from": "check_approval",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "approval_valid, approval_valid",
+            "input": "subscription_data.fund_manager_approval, subscription_data.compliance_officer_approval"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "handle_subscription",
+        "connection": {
+            "output": "action, request_date, amount",
+            "input": "action, subscription_data.request_date, amount"
+        }
+        },
+        {
+        "from": "handle_subscription",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "subscription_id",
+            "input": "reference_id"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "action, reference_type",
+            "input": "action, reference_type"
+        }
+        },
+        {
+        "from": "search_investor_entities",
+        "to": "handle_notifications",
+        "connection": {
+            "output": "results[0].contact_email",
+            "input": "notification_data.email"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "handle_notifications",
+        "connection": {
+            "output": "action, type, class",
+            "input": "action, notification_data.type, notification_data.class"
+        }
+        },
+        {
+        "from": "handle_notifications",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "notification_id",
+            "input": "reference_id"
+        }
+        },
+        {
+        "from": "instruction",
+        "to": "add_new_audit_trail",
+        "connection": {
+            "output": "action, reference_type",
+            "input": "action, reference_type"
+        }
+        }
+    ],
+    "num_edges": 17
+    }
+    }
+
